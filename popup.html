@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>刚刚好</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-flex">
+        <div>
+          <h1>💪 刚刚好</h1>
+          <p class="subtitle">关爱盆底健康，从现在开始</p>
+        </div>
+        <div class="header-buttons">
+          <button id="helpBtn" class="icon-btn" title="运动指南">?</button>
+          <button id="settingsBtn" class="icon-btn" title="设置">⚙</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="stat-item">
+        <div class="stat-value" id="totalSessions">0</div>
+        <div class="stat-label">总练习次数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="todaySessions">0</div>
+        <div class="stat-label">今日练习</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="streak">0</div>
+        <div class="stat-label">连续天数</div>
+      </div>
+    </section>
+
+    <section class="achievements">
+      <h3>成就</h3>
+      <div class="achievement-grid" id="achievementGrid">
+        <!-- 动态生成 -->
+      </div>
+    </section>
+
+    <button id="startNow" class="action-button">立即开始练习</button>
+
+    <footer>
+      <p class="tip">💡 建议每天练习3-5组，持之以恒效果更佳</p>
+    </footer>
+  </div>
+
+  <script src="constants.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

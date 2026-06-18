@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>练习</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: oklch(98% 0.005 260);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .exercise-container {
+      background: white;
+      border: 1px solid oklch(92% 0.005 260);
+      border-radius: 6px;
+      padding: 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: oklch(25% 0.01 260);
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+
+    .timer {
+      font-size: 80px;
+      font-weight: 300;
+      color: oklch(25% 0.01 260);
+      margin: 24px 0;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .phase {
+      font-size: 16px;
+      font-weight: 500;
+      color: oklch(45% 0.15 260);
+      margin-bottom: 32px;
+      min-height: 24px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: oklch(92% 0.005 260);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: oklch(45% 0.15 260);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .current-progress {
+      width: 100%;
+      height: 2px;
+      background: oklch(92% 0.005 260);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .current-fill {
+      height: 100%;
+      background: oklch(60% 0.12 260);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .counter {
+      font-size: 14px;
+      color: oklch(55% 0.01 260);
+      margin-bottom: 24px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: oklch(45% 0.15 260);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: oklch(40% 0.15 260);
+    }
+
+    .btn-primary:active {
+      background: oklch(35% 0.15 260);
+    }
+
+    .btn-secondary {
+      background: oklch(92% 0.005 260);
+      color: oklch(45% 0.01 260);
+    }
+
+    .btn-secondary:hover {
+      background: oklch(88% 0.005 260);
+    }
+
+    .instruction {
+      background: oklch(96% 0.005 260);
+      border-left: 2px solid oklch(45% 0.15 260);
+      padding: 12px 16px;
+      margin: 24px 0;
+      text-align: left;
+      border-radius: 2px;
+    }
+
+    .instruction p {
+      line-height: 1.6;
+      color: oklch(45% 0.01 260);
+      font-size: 14px;
+    }
+
+    .completion {
+      display: none;
+    }
+
+    .completion.show {
+      display: block;
+    }
+
+    .completion-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    .completion h1 {
+      margin-bottom: 12px;
+    }
+
+    .completion p {
+      margin: 16px 0 24px;
+      color: oklch(55% 0.01 260);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* 隐私模式 */
+    body.privacy-mode h1,
+    body.privacy-mode .instruction,
+    body.privacy-mode .completion h1,
+    body.privacy-mode .completion p {
+      display: none;
+    }
+
+    body.privacy-mode .exercise-container {
+      padding: 40px 40px 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="exercise-container">
+    <div id="exerciseView">
+      <h1>💪 开始锻炼</h1>
+
+      <div class="timer" id="timer">5</div>
+      <div class="phase" id="phase">准备开始</div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+
+      <div class="current-progress">
+        <div class="current-fill" id="currentProgress"></div>
+      </div>
+
+      <div class="counter" id="counter">第 0 / 15 次</div>
+
+      <div class="instruction">
+        <p id="instruction">点击"开始练习"按钮，跟随提示完成锻炼</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn-primary" id="startBtn">开始练习</button>
+        <button class="btn-primary hidden" id="pauseBtn">暂停</button>
+        <button class="btn-secondary hidden" id="skipBtn">跳过</button>
+        <button class="btn-secondary" id="closeBtn">关闭</button>
+      </div>
+    </div>
+
+    <div class="completion" id="completionView">
+      <div class="completion-icon">✓</div>
+      <h1>完成练习</h1>
+      <p id="completionText">
+        已完成一组锻炼<br>
+        坚持练习，保持健康
+      </p>
+      <button class="btn-primary" id="restartBtn">再练一组</button>
+      <button class="btn-secondary done-btn" id="doneBtn">完成</button>
+    </div>
+  </div>
+
+  <script src="constants.js"></script>
+  <script src="exercise.js"></script>
+</body>
+</html>

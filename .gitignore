@@ -1,0 +1,35 @@
+# Git 忽略文件
+
+# 开发工具
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 临时文件
+*.log
+*.tmp
+*.bak
+*~
+
+# Claude
+.claude/
+
+# Node.js (如果未来添加构建工具)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 打包文件
+*.zip
+*.crx
+*.pem
+
+# 测试覆盖率
+coverage/
+.nyc_output/

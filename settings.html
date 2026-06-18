@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>刚刚好 - 设置</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-flex">
+        <div>
+          <h1>⚙️ 设置</h1>
+          <p class="subtitle">调整提醒和练习参数</p>
+        </div>
+        <button id="backBtn" class="icon-btn">✕</button>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="control-item">
+        <label class="switch">
+          <input type="checkbox" id="enableToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">启用提醒</span>
+      </div>
+
+      <div class="control-item">
+        <label for="intervalSelect">提醒间隔</label>
+        <select id="intervalSelect">
+          <option value="30">30分钟</option>
+          <option value="45" selected>45分钟</option>
+          <option value="60">1小时</option>
+          <option value="90">1.5小时</option>
+          <option value="120">2小时</option>
+          <option value="custom">自定义</option>
+        </select>
+      </div>
+
+      <div class="control-item custom-interval-group" id="customIntervalGroup">
+        <label for="customInterval">自定义间隔(分钟)</label>
+        <input type="number" id="customInterval" class="custom-interval-input" min="1" max="1440" placeholder="输入分钟数">
+      </div>
+
+      <div class="control-item">
+        <label for="repsSelect">练习次数</label>
+        <select id="repsSelect">
+          <option value="10">10次</option>
+          <option value="15" selected>15次</option>
+          <option value="20">20次</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label for="contractSelect">收缩时长</label>
+        <select id="contractSelect">
+          <option value="3">3秒</option>
+          <option value="5" selected>5秒</option>
+          <option value="8">8秒</option>
+          <option value="10">10秒</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label for="relaxSelect">放松时长</label>
+        <select id="relaxSelect">
+          <option value="5">5秒</option>
+          <option value="10" selected>10秒</option>
+          <option value="15">15秒</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label for="startTimeSelect">工作时段开始</label>
+        <select id="startTimeSelect">
+          <option value="0">不限制</option>
+          <option value="7">7:00</option>
+          <option value="8">8:00</option>
+          <option value="9" selected>9:00</option>
+          <option value="10">10:00</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label for="endTimeSelect">工作时段结束</label>
+        <select id="endTimeSelect">
+          <option value="24">不限制</option>
+          <option value="17">17:00</option>
+          <option value="18" selected>18:00</option>
+          <option value="19">19:00</option>
+          <option value="20">20:00</option>
+          <option value="22">22:00</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label class="switch">
+          <input type="checkbox" id="soundToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">音效提示</span>
+      </div>
+
+      <div class="control-item">
+        <label for="dailyGoalSelect">每日目标</label>
+        <select id="dailyGoalSelect">
+          <option value="0">不设置</option>
+          <option value="2">2组</option>
+          <option value="3" selected>3组</option>
+          <option value="5">5组</option>
+          <option value="10">10组</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label class="switch">
+          <input type="checkbox" id="breakReminderToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">休息提醒</span>
+      </div>
+
+      <div class="control-item">
+        <label class="switch">
+          <input type="checkbox" id="privacyToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">隐私模式</span>
+      </div>
+    </section>
+
+    <section class="data-section">
+      <h3>数据管理</h3>
+      <div class="data-actions">
+        <button id="exportData" class="data-btn">导出数据</button>
+        <button id="importData" class="data-btn">导入数据</button>
+        <button id="clearData" class="data-btn danger">清空统计</button>
+      </div>
+      <input type="file" id="importFile" class="hidden" accept=".json">
+    </section>
+
+    <footer>
+      <p class="tip">所有设置自动保存</p>
+    </footer>
+  </div>
+
+  <script src="constants.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>
