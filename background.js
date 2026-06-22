@@ -28,10 +28,25 @@ function createAlarm(intervalMinutes) {
 // 监听定时器触发
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'healthReminder') {
-    const settings = await chrome.storage.sync.get(['enabled', 'startTime', 'endTime']);
+    const settings = await chrome.storage.sync.get([
+      'enabled', 'startTime', 'endTime', 'lunchBreakEnabled', 'lunchStartTime',
+      'lunchEndTime', 'stopAfterGoal', 'dailyGoal', 'stats'
+    ]);
 
     if (!settings.enabled) {
       return;
+    }
+
+    // 检查是否完成每日目标且开启了"完成后停止提醒"
+    if (settings.stopAfterGoal && settings.dailyGoal > 0) {
+      const today = new Date().toDateString();
+      const stats = settings.stats || {};
+      const dailyLog = stats.dailyLog || {};
+      const todaySessions = dailyLog[today] || 0;
+
+      if (todaySessions >= settings.dailyGoal) {
+        return;
+      }
     }
 
     // 检查是否在工作时段内
@@ -43,6 +58,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     // 如果设置了时段限制且当前不在时段内，则跳过
     if (startTime > 0 || endTime < 24) {
       if (currentHour < startTime || currentHour >= endTime) {
+        return;
+      }
+    }
+
+    // 检查是否在午休时段内
+    if (settings.lunchBreakEnabled) {
+      const lunchStart = settings.lunchStartTime || 12;
+      const lunchEnd = settings.lunchEndTime || 14;
+      if (currentHour >= lunchStart && currentHour < lunchEnd) {
         return;
       }
     }

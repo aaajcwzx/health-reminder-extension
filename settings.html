@@ -97,6 +97,32 @@
 
       <div class="control-item">
         <label class="switch">
+          <input type="checkbox" id="lunchBreakToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">午休免打扰</span>
+      </div>
+
+      <div class="control-item" id="lunchStartGroup">
+        <label for="lunchStartSelect">午休开始</label>
+        <select id="lunchStartSelect">
+          <option value="11">11:00</option>
+          <option value="12" selected>12:00</option>
+          <option value="13">13:00</option>
+        </select>
+      </div>
+
+      <div class="control-item" id="lunchEndGroup">
+        <label for="lunchEndSelect">午休结束</label>
+        <select id="lunchEndSelect">
+          <option value="13">13:00</option>
+          <option value="14" selected>14:00</option>
+          <option value="15">15:00</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label class="switch">
           <input type="checkbox" id="soundToggle">
           <span class="slider"></span>
         </label>
@@ -120,6 +146,14 @@
           <span class="slider"></span>
         </label>
         <span class="control-label">休息提醒</span>
+      </div>
+
+      <div class="control-item">
+        <label class="switch">
+          <input type="checkbox" id="stopAfterGoalToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="control-label">完成目标后停止提醒</span>
       </div>
 
       <div class="control-item">
