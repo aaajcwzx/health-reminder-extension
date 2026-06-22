@@ -3,12 +3,15 @@ let exerciseState = {
   isRunning: false,
   isPaused: false,
   currentPhase: 'ready', // ready, contract, relax, rest
+  currentSet: 1, // 当前第几组
   currentCount: 0,
   totalCount: 15,
   timeLeft: 5,
   totalProgress: 0,
   soundEnabled: false,
-  privacyMode: false
+  privacyMode: false,
+  trainingPlan: 'custom',
+  planConfig: null
 };
 
 // 阶段配置
@@ -21,14 +24,34 @@ let phases = {
 // 加载用户设置
 async function loadExerciseSettings() {
   const settings = await chrome.storage.sync.get([
-    'reps', 'contractDuration', 'relaxDuration', 'soundEnabled', 'privacyMode'
+    'reps', 'contractDuration', 'relaxDuration', 'soundEnabled', 'privacyMode',
+    'trainingPlan', 'stats'
   ]);
 
-  exerciseState.totalCount = settings.reps || 15;
-  phases.contract.duration = settings.contractDuration || 5;
-  phases.relax.duration = settings.relaxDuration || 10;
+  exerciseState.trainingPlan = settings.trainingPlan || 'custom';
   exerciseState.soundEnabled = settings.soundEnabled ?? false;
   exerciseState.privacyMode = settings.privacyMode ?? false;
+
+  // 根据训练方案加载配置
+  if (exerciseState.trainingPlan === 'custom') {
+    // 自定义方案
+    exerciseState.totalCount = settings.reps || 15;
+    phases.contract.duration = settings.contractDuration || 5;
+    phases.relax.duration = settings.relaxDuration || 10;
+  } else {
+    // 预设方案：需要判断当前是第几组
+    exerciseState.planConfig = TRAINING_PLANS[exerciseState.trainingPlan];
+    const stats = settings.stats || {};
+    const today = new Date().toDateString();
+    const todaySessions = (stats.dailyLog || {})[today] || 0;
+    exerciseState.currentSet = (todaySessions % exerciseState.planConfig.sessions.length) + 1;
+
+    // 加载当前组的配置
+    const sessionConfig = exerciseState.planConfig.sessions[exerciseState.currentSet - 1];
+    exerciseState.totalCount = sessionConfig.reps;
+    phases.contract.duration = sessionConfig.contractDuration;
+    phases.relax.duration = sessionConfig.relaxDuration;
+  }
 
   // 更新初始显示
   counterEl.textContent = `第 0 / ${exerciseState.totalCount} 次`;
@@ -233,9 +256,17 @@ async function completeExercise() {
   // 保存统计数据
   await saveExerciseStats();
 
-  // 更新完成页面文字（隐私友好）
+  // 更新完成页面文字
   const completionText = document.getElementById('completionText');
-  completionText.innerHTML = '已完成一组锻炼<br>坚持练习，保持健康';
+  let message = '已完成一组锻炼<br>坚持练习，保持健康';
+
+  // 如果是预设方案，显示组信息
+  if (exerciseState.trainingPlan !== 'custom' && exerciseState.planConfig) {
+    const sessionConfig = exerciseState.planConfig.sessions[exerciseState.currentSet - 1];
+    message = `已完成${sessionConfig.label}<br>坚持练习，保持健康`;
+  }
+
+  completionText.innerHTML = message;
 
   // 显示完成界面
   exerciseView.style.display = 'none';

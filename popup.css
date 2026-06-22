@@ -453,6 +453,38 @@ footer {
   margin-left: 10px;
 }
 
+/* 方案描述 */
+.plan-description {
+  background: oklch(96% 0.005 260);
+  border-left: 2px solid oklch(45% 0.15 260);
+  padding: 12px 16px;
+  margin: 12px 0;
+  border-radius: 2px;
+  font-size: 13px;
+  color: oklch(45% 0.01 260);
+  line-height: 1.5;
+  display: none;
+}
+
+.plan-description.show {
+  display: block;
+}
+
+.plan-description strong {
+  color: oklch(25% 0.01 260);
+  font-weight: 600;
+}
+
+.plan-description ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 8px 0 0 0;
+}
+
+.plan-description li {
+  padding: 4px 0;
+}
+
 /* 反馈提示样式 */
 .feedback-toast {
   position: fixed;

@@ -1,11 +1,16 @@
 // DOM元素
 const enableToggle = document.getElementById('enableToggle');
+const trainingPlanSelect = document.getElementById('trainingPlanSelect');
+const planDescription = document.getElementById('planDescription');
 const intervalSelect = document.getElementById('intervalSelect');
 const customIntervalGroup = document.getElementById('customIntervalGroup');
 const customIntervalInput = document.getElementById('customInterval');
 const repsSelect = document.getElementById('repsSelect');
+const repsGroup = document.getElementById('repsGroup');
 const contractSelect = document.getElementById('contractSelect');
+const contractGroup = document.getElementById('contractGroup');
 const relaxSelect = document.getElementById('relaxSelect');
+const relaxGroup = document.getElementById('relaxGroup');
 const startTimeSelect = document.getElementById('startTimeSelect');
 const endTimeSelect = document.getElementById('endTimeSelect');
 const lunchBreakToggle = document.getElementById('lunchBreakToggle');
@@ -29,7 +34,7 @@ async function loadSettings() {
   const settings = await chrome.storage.sync.get([
     'interval', 'enabled', 'reps', 'contractDuration', 'relaxDuration',
     'startTime', 'endTime', 'lunchBreakEnabled', 'lunchStartTime', 'lunchEndTime',
-    'soundEnabled', 'dailyGoal', 'breakReminderEnabled', 'stopAfterGoal', 'privacyMode'
+    'soundEnabled', 'dailyGoal', 'breakReminderEnabled', 'stopAfterGoal', 'privacyMode', 'trainingPlan'
   ]);
 
   // 如果enabled未设置，保存默认值true
@@ -39,6 +44,12 @@ async function loadSettings() {
   }
 
   enableToggle.checked = settings.enabled ?? true;
+
+  // 训练方案设置
+  const trainingPlan = settings.trainingPlan || 'custom';
+  trainingPlanSelect.value = trainingPlan;
+  updatePlanDescription(trainingPlan);
+  updateCustomParametersVisibility(trainingPlan);
 
   const interval = settings.interval || 45;
   const presetValues = ['30', '45', '60', '90', '120'];
@@ -72,6 +83,32 @@ async function loadSettings() {
   privacyToggle.checked = settings.privacyMode ?? false;
 }
 
+// 更新方案描述
+function updatePlanDescription(planKey) {
+  const plan = TRAINING_PLANS[planKey];
+  if (planKey === 'custom') {
+    planDescription.classList.remove('show');
+    return;
+  }
+
+  let html = `<strong>${plan.name}</strong> - ${plan.description}<br>每日目标：${plan.dailyGoal}组<ul>`;
+  plan.sessions.forEach((session, index) => {
+    html += `<li>${session.label}: ${session.reps}次 (${session.contractDuration}秒收缩 + ${session.relaxDuration}秒放松)</li>`;
+  });
+  html += '</ul>';
+
+  planDescription.innerHTML = html;
+  planDescription.classList.add('show');
+}
+
+// 更新自定义参数显隐
+function updateCustomParametersVisibility(planKey) {
+  const isCustom = planKey === 'custom';
+  repsGroup.style.display = isCustom ? 'flex' : 'none';
+  contractGroup.style.display = isCustom ? 'flex' : 'none';
+  relaxGroup.style.display = isCustom ? 'flex' : 'none';
+}
+
 // 保存设置
 async function saveSettings(key, value) {
   await chrome.storage.sync.set({ [key]: value });
@@ -102,6 +139,24 @@ enableToggle.addEventListener('change', async (e) => {
   });
 
   showFeedback(enabled ? '提醒已启用 ✓' : '提醒已关闭');
+});
+
+// 训练方案切换
+trainingPlanSelect.addEventListener('change', async (e) => {
+  const planKey = e.target.value;
+  const plan = TRAINING_PLANS[planKey];
+
+  await saveSettings('trainingPlan', planKey);
+
+  if (planKey !== 'custom') {
+    // 预设方案：保存每日目标
+    await saveSettings('dailyGoal', plan.dailyGoal);
+    dailyGoalSelect.value = plan.dailyGoal;
+  }
+
+  updatePlanDescription(planKey);
+  updateCustomParametersVisibility(planKey);
+  showFeedback(`已切换到${plan.name} ✓`);
 });
 
 // 修改提醒间隔

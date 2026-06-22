@@ -28,6 +28,18 @@
       </div>
 
       <div class="control-item">
+        <label for="trainingPlanSelect">训练方案</label>
+        <select id="trainingPlanSelect">
+          <option value="custom">自定义</option>
+          <option value="beginner">初级入门</option>
+          <option value="intermediate">进阶提升</option>
+          <option value="advanced">高级强化</option>
+        </select>
+      </div>
+
+      <div id="planDescription" class="plan-description"></div>
+
+      <div class="control-item">
         <label for="intervalSelect">提醒间隔</label>
         <select id="intervalSelect">
           <option value="30">30分钟</option>
@@ -44,7 +56,7 @@
         <input type="number" id="customInterval" class="custom-interval-input" min="1" max="1440" placeholder="输入分钟数">
       </div>
 
-      <div class="control-item">
+      <div class="control-item" id="repsGroup">
         <label for="repsSelect">练习次数</label>
         <select id="repsSelect">
           <option value="10">10次</option>
@@ -53,7 +65,7 @@
         </select>
       </div>
 
-      <div class="control-item">
+      <div class="control-item" id="contractGroup">
         <label for="contractSelect">收缩时长</label>
         <select id="contractSelect">
           <option value="3">3秒</option>
@@ -63,7 +75,7 @@
         </select>
       </div>
 
-      <div class="control-item">
+      <div class="control-item" id="relaxGroup">
         <label for="relaxSelect">放松时长</label>
         <select id="relaxSelect">
           <option value="5">5秒</option>
