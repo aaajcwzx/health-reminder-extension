@@ -21,7 +21,6 @@ const lunchEndGroup = document.getElementById('lunchEndGroup');
 const soundToggle = document.getElementById('soundToggle');
 const dailyGoalSelect = document.getElementById('dailyGoalSelect');
 const breakReminderToggle = document.getElementById('breakReminderToggle');
-const stopAfterGoalToggle = document.getElementById('stopAfterGoalToggle');
 const privacyToggle = document.getElementById('privacyToggle');
 const exportDataBtn = document.getElementById('exportData');
 const importDataBtn = document.getElementById('importData');
@@ -34,7 +33,7 @@ async function loadSettings() {
   const settings = await chrome.storage.sync.get([
     'interval', 'enabled', 'reps', 'contractDuration', 'relaxDuration',
     'startTime', 'endTime', 'lunchBreakEnabled', 'lunchStartTime', 'lunchEndTime',
-    'soundEnabled', 'dailyGoal', 'breakReminderEnabled', 'stopAfterGoal', 'privacyMode', 'trainingPlan'
+    'soundEnabled', 'dailyGoal', 'breakReminderEnabled', 'privacyMode', 'trainingPlan'
   ]);
 
   // 如果enabled未设置，保存默认值true
@@ -79,7 +78,6 @@ async function loadSettings() {
   soundToggle.checked = settings.soundEnabled ?? false;
   dailyGoalSelect.value = settings.dailyGoal || 3;
   breakReminderToggle.checked = settings.breakReminderEnabled ?? false;
-  stopAfterGoalToggle.checked = settings.stopAfterGoal ?? false;
   privacyToggle.checked = settings.privacyMode ?? false;
 }
 
@@ -274,13 +272,6 @@ breakReminderToggle.addEventListener('change', async (e) => {
   });
 
   showFeedback(enabled ? '休息提醒已启用 ✓' : '休息提醒已关闭');
-});
-
-// 完成目标后停止提醒开关
-stopAfterGoalToggle.addEventListener('change', async (e) => {
-  const enabled = e.target.checked;
-  await saveSettings('stopAfterGoal', enabled);
-  showFeedback(enabled ? '完成目标后将停止提醒 ✓' : '完成目标后继续提醒');
 });
 
 // 隐私模式开关

@@ -30,15 +30,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'healthReminder') {
     const settings = await chrome.storage.sync.get([
       'enabled', 'startTime', 'endTime', 'lunchBreakEnabled', 'lunchStartTime',
-      'lunchEndTime', 'stopAfterGoal', 'dailyGoal', 'stats'
+      'lunchEndTime', 'dailyGoal', 'stats'
     ]);
 
     if (!settings.enabled) {
       return;
     }
 
-    // 检查是否完成每日目标且开启了"完成后停止提醒"
-    if (settings.stopAfterGoal && settings.dailyGoal > 0) {
+    // 检查是否完成每日目标（只要设置了目标就自动停止）
+    if (settings.dailyGoal > 0) {
       const today = new Date().toDateString();
       const stats = settings.stats || {};
       const dailyLog = stats.dailyLog || {};
